@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="section-title">Frequently Asked Questions</h1>
+            <p class="section-subtitle">Find answers to common university questions</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    {% if faqs %}
+                        {% for faq in faqs %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button {% if not loop.first %}collapsed{% endif %}"
+                                        type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#faq{{ loop.index }}">
+                                    {{ faq.question }}
+                                </button>
+                            </h2>
+                            <div id="faq{{ loop.index }}"
+                                 class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                                 data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    {{ faq.answer }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card p-5 text-center">
+                            <i class="bi bi-question-circle display-1 text-muted mb-3"></i>
+                            <h4>No FAQs Available</h4>
+                            <p class="text-muted">FAQs will be added soon. Please check back later.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted">Can't find your answer?</p>
+            <a href="{{ url_for('chatbot') }}" class="btn btn-primary">
+                <i class="bi bi-chat-dots"></i> Chat with UniBot
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

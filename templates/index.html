@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="hero-title slide-up">
+                    Your AI-Powered<br>University Assistant
+                </h1>
+                <p class="hero-subtitle slide-up" style="animation-delay: 0.1s">
+                    Get instant answers to all your university queries - admissions, fees, exams, and more.
+                    Our smart chatbot is available 24/7 to help you.
+                </p>
+                <div class="d-flex gap-3 flex-wrap slide-up" style="animation-delay: 0.2s">
+                    {% if session.user_id %}
+                        <a href="/chatbot" class="btn btn-primary btn-lg">
+                            <i class="bi bi-chat-dots"></i> Start Chatting
+                        </a>
+                        <a href="/dashboard" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-grid"></i> Dashboard
+                        </a>
+                    {% else %}
+                        <a href="/register" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus"></i> Get Started
+                        </a>
+                        <a href="/login" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-illustration text-center">
+                    <svg class="hero-image" width="500" height="400" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="50" width="400" height="300" rx="20" fill="#2563eb" fill-opacity="0.1"/>
+                        <rect x="70" y="70" width="360" height="260" rx="15" fill="white" stroke="#2563eb" stroke-width="2"/>
+                        <circle cx="250" cy="200" r="80" fill="#2563eb" fill-opacity="0.2"/>
+                        <circle cx="250" cy="180" r="30" fill="#2563eb"/>
+                        <path d="M205 220 Q250 260 295 220" stroke="#2563eb" stroke-width="3" fill="none"/>
+                        <rect x="120" y="300" width="120" height="30" rx="15" fill="#0ea5e9" fill-opacity="0.3"/>
+                        <rect x="260" y="300" width="120" height="30" rx="15" fill="#10b981" fill-opacity="0.3"/>
+                        <circle cx="130" cy="315" r="10" fill="#0ea5e9"/>
+                        <circle cx="270" cy="315" r="10" fill="#10b981"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section bg-primary-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">How Can I Help You?</h2>
+            <p class="section-subtitle">Get instant answers to your university-related questions</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-mortarboard"></i>
+                    </div>
+                    <h5 class="card-title">Admissions</h5>
+                    <p class="card-text">Learn about admission processes, requirements, and important dates.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <h5 class="card-title">Fee Information</h5>
+                    <p class="card-text">Get details about tuition fees, payment methods, and deadlines.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h5 class="card-title">Exam Schedule</h5>
+                    <p class="card-text">Find exam dates, hall tickets, and result announcements.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h5 class="card-title">Library</h5>
+                    <p class="card-text">Discover library hours, book availability, and digital resources.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-house-door"></i>
+                    </div>
+                    <h5 class="card-title">Hostel</h5>
+                    <p class="card-text">Information about hostel facilities, rules, and accommodation.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-bus-front"></i>
+                    </div>
+                    <h5 class="card-title">Transport</h5>
+                    <p class="card-text">Bus routes, schedules, and transport fees information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get answers in just 3 simple steps</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-4" style="margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold;">1</span>
+                    </div>
+                    <h5 class="mb-3">Ask Your Question</h5>
+                    <p class="text-muted">Type your university-related question in natural language</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-4" style="margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold;">2</span>
+                    </div>
+                    <h5 class="mb-3">AI Processes</h5>
+                    <p class="text-muted">Our NLP engine understands your intent and finds relevant information</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-4" style="margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold;">3</span>
+                    </div>
+                    <h5 class="mb-3">Get Instant Answer</h5>
+                    <p class="text-muted">Receive accurate responses instantly without waiting in queues</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section text-center" style="padding: 5rem 0;">
+    <div class="container">
+        <h2 class="section-title">Ready to Get Started?</h2>
+        <p class="section-subtitle mx-auto" style="max-width: 500px;">
+            Join thousands of students who are already using UniBot for their university queries.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            {% if not session.user_id %}
+                <a href="/register" class="btn btn-primary btn-lg">
+                    <i class="bi bi-person-plus"></i> Register Now
+                </a>
+            {% else %}
+                <a href="/chatbot" class="btn btn-primary btn-lg">
+                    <i class="bi bi-chat-dots"></i> Chat Now
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_js %}
+{% endblock %}

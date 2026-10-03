@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card fade-in">
+        <div class="text-center mb-4">
+            <div class="feature-icon mx-auto mb-3" style="width: 70px; height: 70px;">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join us and start getting instant answers</p>
+        </div>
+
+        <form id="registerForm" action="{{ url_for('register') }}" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" name="full_name" required
+                       placeholder="Enter your full name" autocomplete="name">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Roll Number</label>
+                    <input type="text" class="form-control" name="roll_number" required
+                           placeholder="e.g., 21CS101" pattern="[A-Za-z0-9]{6,12}">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Department</label>
+                    <select class="form-select" name="department" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science Engineering">Computer Science Engineering</option>
+                        <option value="Electronics Engineering">Electronics Engineering</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Civil Engineering">Civil Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Computer Applications">Computer Applications</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" name="email" required
+                       placeholder="Enter your email" autocomplete="email">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required
+                           placeholder="Min 6 characters" id="password" minlength="6">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirm_password" required
+                           placeholder="Confirm password" id="confirm_password" minlength="6" oninput="if(this.value != document.getElementById('password').value) this.setCustomValidity('Passwords do not match'); else this.setCustomValidity('')">
+                </div>
+            </div>
+
+            <div class="form-check mb-4">
+                <input type="checkbox" class="form-check-input" id="terms" required>
+                <label class="form-check-label" for="terms">
+                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                <i class="bi bi-person-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Sign in here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

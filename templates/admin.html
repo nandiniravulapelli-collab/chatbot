@@ -1,0 +1,972 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-avatar" style="background: linear-gradient(135deg, #ef4444, #f59e0b);">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <div class="sidebar-user-info">
+                <h6>Administrator</h6>
+                <small>{{ session.email }}</small>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#dashboard" class="active" data-section="dashboard">
+                    <i class="bi bi-grid"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="#students" data-section="students">
+                    <i class="bi bi-people"></i> Students
+                </a>
+            </li>
+            <li>
+                <a href="#queries" data-section="queries">
+                    <i class="bi bi-chat-left-text"></i> Queries
+                </a>
+            </li>
+            <li>
+                <a href="#faqs" data-section="faqs">
+                    <i class="bi bi-question-circle"></i> Manage FAQs
+                </a>
+            </li>
+            <li>
+                <a href="#fees" data-section="fees">
+                    <i class="bi bi-currency-rupee"></i> Fee Structure
+                </a>
+            </li>
+            <li>
+                <a href="#exams" data-section="exams">
+                    <i class="bi bi-calendar-check"></i> Exam Schedule
+                </a>
+            </li>
+            <li>
+                <a href="#enrollment" data-section="enrollment">
+                    <i class="bi bi-journal-plus"></i> Enrollment
+                </a>
+            </li>
+            <li>
+                <a href="#contact" data-section="contact">
+                    <i class="bi bi-envelope"></i> Contact Details
+                </a>
+            </li>
+            <li>
+                <a href="#messages" data-section="messages">
+                    <i class="bi bi-chat-dots"></i> Student Messages
+                </a>
+            </li>
+            <li class="mt-4">
+                <a href="{{ url_for('logout') }}" class="text-danger">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="admin-section">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Admin Dashboard</h1>
+                <p class="text-muted">Overview of system statistics</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value" id="totalStudents">--</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="bi bi-question-circle"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value" id="totalFaqs">--</div>
+                            <div class="stat-label">FAQs</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="bi bi-chat-dots"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value" id="totalQueries">--</div>
+                            <div class="stat-label">User Queries</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon accent">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value" id="resolvedQueries">--</div>
+                            <div class="stat-label">Resolved</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card p-4">
+                        <h5 class="mb-3">Quick Actions</h5>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <button class="btn btn-primary" onclick="loadSection('students')">
+                                <i class="bi bi-people"></i> Manage Students
+                            </button>
+                            <button class="btn btn-success" onclick="createFaq()">
+                                <i class="bi bi-plus-circle"></i> Add FAQ
+                            </button>
+                            <button class="btn btn-info" onclick="loadSection('faqs')">
+                                <i class="bi bi-list-ul"></i> View All FAQs
+                            </button>
+                            <button class="btn btn-warning text-white" onclick="loadSection('queries')">
+                                <i class="bi bi-chat-left-text"></i> View Queries
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Section -->
+        <div id="students" class="admin-section" style="display: none;">
+            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="dashboard-title">Students</h1>
+                    <p class="text-muted">Manage registered students</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control" placeholder="Search students..." id="studentSearch">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Roll Number</th>
+                            <th>Department</th>
+                            <th>Email</th>
+                            <th>Registered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTable">
+                        <tr>
+                            <td colspan="6" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Queries Section -->
+        <div id="queries" class="admin-section" style="display: none;">
+            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="dashboard-title">Student Queries</h1>
+                    <p class="text-muted">View and analyze student questions</p>
+                </div>
+                <select class="form-select w-auto" id="queryFilter">
+                    <option value="">All Status</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="needs_review">Needs Review</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Question</th>
+                            <th>Intent</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queriesTable">
+                        <tr>
+                            <td colspan="5" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FAQs Section -->
+        <div id="faqs" class="admin-section" style="display: none;">
+            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="dashboard-title">Manage FAQs</h1>
+                    <p class="text-muted">Add, edit, or delete frequently asked questions</p>
+                </div>
+                <button class="btn btn-primary" onclick="createFaq()">
+                    <i class="bi bi-plus-circle"></i> Add FAQ
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faqsTable">
+                        <tr>
+                            <td colspan="4" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fee Structure Section -->
+        <div id="fees" class="admin-section" style="display: none;">
+            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="dashboard-title">Fee Structure</h1>
+                    <p class="text-muted">Manage fee details by department</p>
+                </div>
+                <button class="btn btn-primary" onclick="document.getElementById('feeForm').scrollIntoView({behavior: 'smooth'})">
+                    <i class="bi bi-plus-circle"></i> Add Fee Structure
+                </button>
+            </div>
+
+            <div class="table-container mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Semester</th>
+                            <th>Tuition Fee</th>
+                            <th>Exam Fee</th>
+                            <th>Library Fee</th>
+                            <th>Lab Fee</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feesTable">
+                        <tr>
+                            <td colspan="8" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card p-4">
+                <h5>Add New Fee Structure</h5>
+                <form id="feeForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="department" required>
+                                <option value="CSE">Computer Science Engineering</option>
+                                <option value="ECE">Electronics Engineering</option>
+                                <option value="ME">Mechanical Engineering</option>
+                                <option value="CE">Civil Engineering</option>
+                                <option value="EEE">Electrical Engineering</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Semester</label>
+                            <input type="number" class="form-control" name="semester" min="1" max="8" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Tuition Fee</label>
+                            <input type="number" class="form-control" name="tuition_fee" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Exam Fee</label>
+                            <input type="number" class="form-control" name="exam_fee" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Library Fee</label>
+                            <input type="number" class="form-control" name="library_fee" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Lab Fee</label>
+                            <input type="number" class="form-control" name="lab_fee" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Total</label>
+                            <input type="number" class="form-control" name="total" required>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Fee Structure
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Exam Schedule Section -->
+        <div id="exams" class="admin-section" style="display: none;">
+            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="dashboard-title">Exam Schedule</h1>
+                    <p class="text-muted">Add exam schedules</p>
+                </div>
+            </div>
+
+            <div class="table-container mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Semester</th>
+                            <th>Exam Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="examsTable">
+                        <tr>
+                            <td colspan="7" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card p-4">
+                <h5>Add New Exam Schedule</h5>
+                <form id="examForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="department" required>
+                                <option value="CSE">Computer Science Engineering</option>
+                                <option value="ECE">Electronics Engineering</option>
+                                <option value="ME">Mechanical Engineering</option>
+                                <option value="CE">Civil Engineering</option>
+                                <option value="EEE">Electrical Engineering</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Semester</label>
+                            <input type="number" class="form-control" name="semester" min="1" max="8" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Exam Name</label>
+                            <input type="text" class="form-control" name="exam_name" required placeholder="e.g., Mid-Semester Exams">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" name="description">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" name="start_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" name="end_date" required>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Add Exam Schedule
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Enrollment Section -->
+        <div id="enrollment" class="admin-section" style="display: none;">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Enrollment Information</h1>
+                <p class="text-muted">Add enrollment details</p>
+            </div>
+            <div class="alert alert-info">Use this section to add enrollment information for students.</div>
+        </div>
+
+        <!-- Contact Details Section -->
+        <div id="contact" class="admin-section" style="display: none;">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Contact Details</h1>
+                <p class="text-muted">Edit contact information displayed to students</p>
+            </div>
+
+            <div class="card p-4">
+                <form id="contactDetailsForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" id="contactAddress" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <textarea class="form-control" id="contactPhone" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <textarea class="form-control" id="contactEmail" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Office Hours</label>
+                            <textarea class="form-control" id="contactOfficeHours" rows="3" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Contact Details
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Messages Section -->
+        <div id="messages" class="admin-section" style="display: none;">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Student Messages</h1>
+                <p class="text-muted">View and reply to student messages</p>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messagesTable">
+                        <tr>
+                            <td colspan="6" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Modal -->
+<div class="modal fade" id="faqModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="faqModalTitle">Add FAQ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="faqForm">
+                    <input type="hidden" id="faqId">
+                    <div class="mb-3">
+                        <label class="form-label">Question</label>
+                        <input type="text" class="form-control" name="question" id="faqQuestion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Answer</label>
+                        <textarea class="form-control" name="answer" rows="4" id="faqAnswer" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category" id="faqCategory">
+                            <option value="general">General</option>
+                            <option value="admissions">Admissions</option>
+                            <option value="fees">Fees</option>
+                            <option value="exams">Exams</option>
+                            <option value="hostel">Hostel</option>
+                            <option value="library">Library</option>
+                            <option value="transport">Transport</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer px-0 pb-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save FAQ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+console.log('Admin dashboard script loaded');
+
+// Load analytics
+async function loadAnalytics() {
+    try {
+        const response = await API.get('/api/admin/analytics');
+        if (response.success) {
+            document.getElementById('totalStudents').textContent = response.analytics.total_students;
+            document.getElementById('totalFaqs').textContent = response.analytics.total_faqs;
+            document.getElementById('totalQueries').textContent = response.analytics.total_queries;
+            document.getElementById('resolvedQueries').textContent = response.analytics.resolved_queries;
+        } else {
+            console.error('Failed to load analytics:', response.message);
+            document.getElementById('totalStudents').textContent = 'Error';
+            document.getElementById('totalFaqs').textContent = 'Error';
+            document.getElementById('totalQueries').textContent = 'Error';
+            document.getElementById('resolvedQueries').textContent = 'Error';
+        }
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+        document.getElementById('totalStudents').textContent = 'Error';
+        document.getElementById('totalFaqs').textContent = 'Error';
+        document.getElementById('totalQueries').textContent = 'Error';
+        document.getElementById('resolvedQueries').textContent = 'Error';
+    }
+}
+
+// Load Fees
+async function loadFees() {
+    try {
+        const response = await API.get('/api/admin/fees');
+        const tbody = document.getElementById('feesTable');
+        if (response.success) {
+            tbody.innerHTML = response.fees.map(fee => `
+                <tr>
+                    <td>${fee.department}</td>
+                    <td>${fee.semester}</td>
+                    <td>Rs. ${fee.tuition_fee}</td>
+                    <td>Rs. ${fee.exam_fee}</td>
+                    <td>Rs. ${fee.library_fee}</td>
+                    <td>Rs. ${fee.lab_fee}</td>
+                    <td>Rs. ${fee.total}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteFee('${fee._id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        } else {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center">Error loading fees</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error loading fees:', error);
+        document.getElementById('feesTable').innerHTML = '<tr><td colspan="8" class="text-center">Error loading fees</td></tr>';
+    }
+}
+
+// Delete Fee
+async function deleteFee(id) {
+    if (confirm('Are you sure you want to delete this fee structure?')) {
+        const response = await API.delete(`/api/admin/fees/${id}`);
+        if (response.success) {
+            loadFees();
+            loadAnalytics();
+            Toast.show('Fee structure deleted successfully', 'success');
+        } else {
+            Toast.show('Error deleting fee: ' + response.message, 'error');
+        }
+    }
+}
+
+// Load Exams
+async function loadExams() {
+    try {
+        const response = await API.get('/api/admin/exams');
+        const tbody = document.getElementById('examsTable');
+        if (response.success) {
+            tbody.innerHTML = response.exams.map(exam => `
+                <tr>
+                    <td>${exam.department}</td>
+                    <td>${exam.semester}</td>
+                    <td>${exam.exam_name}</td>
+                    <td>${exam.start_date}</td>
+                    <td>${exam.end_date}</td>
+                    <td>${exam.description || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteExam('${exam._id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        } else {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">Error loading exams</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error loading exams:', error);
+        document.getElementById('examsTable').innerHTML = '<tr><td colspan="7" class="text-center">Error loading exams</td></tr>';
+    }
+}
+
+// Delete Exam
+async function deleteExam(id) {
+    if (confirm('Are you sure you want to delete this exam schedule?')) {
+        const response = await API.delete(`/api/admin/exams/${id}`);
+        if (response.success) {
+            loadExams();
+            loadAnalytics();
+            Toast.show('Exam schedule deleted successfully', 'success');
+        } else {
+            Toast.show('Error deleting exam: ' + response.message, 'error');
+        }
+    }
+}
+
+// Load Students
+async function loadStudents() {
+    const response = await API.get('/api/admin/students');
+    const tbody = document.getElementById('studentsTable');
+    if (response.success && response.students.length) {
+        tbody.innerHTML = response.students.map(s => `
+            <tr>
+                <td>${s.full_name}</td>
+                <td>${s.roll_number}</td>
+                <td>${s.department}</td>
+                <td>${s.email}</td>
+                <td>${new Date(s.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="deleteStudent('${s._id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } else {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No students found</td></tr>';
+    }
+}
+
+// Load Queries
+async function loadQueries() {
+    const response = await API.get('/api/admin/queries');
+    const tbody = document.getElementById('queriesTable');
+    if (response.success && response.queries.length) {
+        tbody.innerHTML = response.queries.map(q => `
+            <tr>
+                <td>${q.user_name || 'Anonymous'}</td>
+                <td>${q.question}</td>
+                <td><span class="badge bg-secondary">${q.intent || 'unknown'}</span></td>
+                <td><span class="badge ${q.status === 'resolved' ? 'bg-success' : 'bg-warning'}">${q.status}</span></td>
+                <td>${q.timestamp}</td>
+            </tr>
+        `).join('');
+    } else {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No queries found</td></tr>';
+    }
+}
+
+// Load Contact Details
+async function loadContactDetails() {
+    try {
+        const response = await API.get('/api/contact-details');
+        if (response.success) {
+            const details = response.details;
+            document.getElementById('contactAddress').value = details.address || '';
+            document.getElementById('contactPhone').value = details.phone || '';
+            document.getElementById('contactEmail').value = details.email || '';
+            document.getElementById('contactOfficeHours').value = details.office_hours || '';
+        }
+    } catch (error) {
+        console.error('Error loading contact details:', error);
+    }
+}
+
+// Save Contact Details
+document.getElementById('contactDetailsForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const data = {
+        address: document.getElementById('contactAddress').value,
+        phone: document.getElementById('contactPhone').value,
+        email: document.getElementById('contactEmail').value,
+        office_hours: document.getElementById('contactOfficeHours').value
+    };
+    
+    try {
+        const response = await API.put('/api/admin/contact-details', data);
+        if (response.success) {
+            Toast.show('Contact details saved successfully', 'success');
+        } else {
+            Toast.show('Error saving contact details: ' + response.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error saving contact details:', error);
+        Toast.show('Error saving contact details', 'error');
+    }
+});
+
+// Load Student Messages
+async function loadStudentMessages() {
+    try {
+        const response = await API.get('/api/admin/student-messages');
+        const tbody = document.getElementById('messagesTable');
+        if (response.success) {
+            if (response.messages.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No messages found</td></tr>';
+            } else {
+                tbody.innerHTML = response.messages.map(msg => `
+                    <tr>
+                        <td>
+                            <div><strong>${msg.student_name}</strong></div>
+                            <small class="text-muted">${msg.student_email}</small>
+                        </td>
+                        <td>${msg.subject}</td>
+                        <td>${msg.message}</td>
+                        <td>
+                            <span class="badge ${msg.status === 'replied' ? 'bg-success' : 'bg-warning'}">${msg.status}</span>
+                        </td>
+                        <td>${new Date(msg.created_at).toLocaleString()}</td>
+                        <td>
+                            ${msg.status === 'pending' ? 
+                                `<button class="btn btn-sm btn-primary" onclick="replyToMessage('${msg._id}', '${encodeURIComponent(msg.student_name)}')">
+                                    <i class="bi bi-reply"></i> Reply
+                                </button>` : 
+                                `<button class="btn btn-sm btn-outline-secondary" onclick="viewReply('${encodeURIComponent(msg.reply)}')">
+                                    <i class="bi bi-eye"></i> View Reply
+                                </button>`
+                            }
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } else {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">Error loading messages</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error loading student messages:', error);
+        document.getElementById('messagesTable').innerHTML = '<tr><td colspan="6" class="text-center">Error loading messages</td></tr>';
+    }
+}
+
+// Reply to Student Message
+async function replyToMessage(messageId, studentName) {
+    const reply = prompt(`Enter your reply for ${decodeURIComponent(studentName)}:`);
+    if (reply) {
+        try {
+            const response = await API.put(`/api/admin/student-messages/${messageId}/reply`, { reply });
+            if (response.success) {
+                Toast.show('Reply sent successfully', 'success');
+                loadStudentMessages();
+            } else {
+                Toast.show('Error sending reply: ' + response.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error sending reply:', error);
+            Toast.show('Error sending reply', 'error');
+        }
+    }
+}
+
+// View Reply
+function viewReply(reply) {
+    alert('Admin Reply:\n\n' + decodeURIComponent(reply));
+}
+
+// Load FAQs
+async function loadFaqs() {
+    const response = await API.get('/api/admin/faqs');
+    const tbody = document.getElementById('faqsTable');
+    if (response.success && response.faqs.length) {
+        tbody.innerHTML = response.faqs.map(f => `
+            <tr>
+                <td>${f.question}</td>
+                <td>${f.answer.substring(0, 100)}...</td>
+                <td><span class="badge bg-primary">${f.category}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editFaq('${f._id}', '${encodeURIComponent(f.question)}', '${encodeURIComponent(f.answer)}', '${f.category}')">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteFaq('${f._id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } else {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No FAQs found</td></tr>';
+    }
+}
+
+// Section navigation
+function loadSection(section) {
+    document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
+    document.getElementById(section).style.display = 'block';
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    document.querySelector(`[data-section="${section}"]`)?.classList.add('active');
+
+    if (section === 'students') loadStudents();
+    if (section === 'queries') loadQueries();
+    if (section === 'faqs') loadFaqs();
+    if (section === 'fees') loadFees();
+    if (section === 'exams') loadExams();
+    if (section === 'contact') loadContactDetails();
+    if (section === 'messages') loadStudentMessages();
+}
+
+// Sidebar clicks
+document.querySelectorAll('.sidebar-menu a[data-section]').forEach(a => {
+    a.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadSection(a.dataset.section);
+    });
+});
+
+// FAQ functions
+function createFaq() {
+    document.getElementById('faqModalTitle').textContent = 'Add FAQ';
+    document.getElementById('faqId').value = '';
+    document.getElementById('faqQuestion').value = '';
+    document.getElementById('faqAnswer').value = '';
+    document.getElementById('faqCategory').value = 'general';
+    new bootstrap.Modal(document.getElementById('faqModal')).show();
+}
+
+function editFaq(id, question, answer, category) {
+    document.getElementById('faqModalTitle').textContent = 'Edit FAQ';
+    document.getElementById('faqId').value = id;
+    document.getElementById('faqQuestion').value = decodeURIComponent(question);
+    document.getElementById('faqAnswer').value = decodeURIComponent(answer);
+    document.getElementById('faqCategory').value = category;
+    new bootstrap.Modal(document.getElementById('faqModal')).show();
+}
+
+async function deleteFaq(id) {
+    if (confirm('Are you sure you want to delete this FAQ?')) {
+        const response = await API.delete(`/api/admin/faqs/${id}`);
+        if (response.success) {
+            loadFaqs();
+            loadAnalytics(); // Refresh analytics after deletion
+            Toast.show('FAQ deleted successfully', 'success');
+        } else {
+            Toast.show('Error deleting FAQ: ' + response.message, 'error');
+        }
+    }
+}
+
+// FAQ form submission
+document.getElementById('faqForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('faqId').value;
+    const data = {
+        question: document.getElementById('faqQuestion').value,
+        answer: document.getElementById('faqAnswer').value,
+        category: document.getElementById('faqCategory').value
+    };
+
+    let response;
+    if (id) {
+        response = await API.put(`/api/admin/faqs/${id}`, data);
+    } else {
+        response = await API.post('/api/admin/faqs', data);
+    }
+
+    if (response.success) {
+        bootstrap.Modal.getInstance(document.getElementById('faqModal')).hide();
+        loadFaqs();
+        loadAnalytics(); // Refresh analytics after FAQ changes
+        Toast.show(id ? 'FAQ updated successfully' : 'FAQ added successfully', 'success');
+    } else {
+        Toast.show('Error: ' + response.message, 'error');
+    }
+});
+
+// Delete student
+async function deleteStudent(id) {
+    if (confirm('Are you sure you want to delete this student?')) {
+        await API.delete(`/api/admin/students/${id}`);
+        loadStudents();
+    }
+}
+
+// Fee form
+const feeForm = document.getElementById('feeForm');
+if (feeForm) {
+    feeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log('Fee form submitted');
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        // Convert numeric fields
+        data.tuition_fee = Number(data.tuition_fee);
+        data.exam_fee = Number(data.exam_fee);
+        data.library_fee = Number(data.library_fee);
+        data.lab_fee = Number(data.lab_fee);
+        data.total = Number(data.total);
+        data.semester = Number(data.semester);
+        console.log('Fee data:', data);
+        const response = await API.post('/api/admin/fees', data);
+        console.log('Fee response:', response);
+        if (response.success) {
+            Toast.show('Fee structure saved!', 'success');
+            e.target.reset();
+            loadFees();
+            loadAnalytics(); // Refresh analytics after saving
+        } else {
+            Toast.show('Error saving fee structure: ' + response.message, 'error');
+        }
+    });
+} else {
+    console.error('Fee form not found');
+}
+
+// Exam form
+const examForm = document.getElementById('examForm');
+if (examForm) {
+    examForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log('Exam form submitted');
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        // Convert numeric fields
+        data.semester = Number(data.semester);
+        console.log('Exam data:', data);
+        const response = await API.post('/api/admin/exams', data);
+        console.log('Exam response:', response);
+        if (response.success) {
+            Toast.show('Exam schedule saved!', 'success');
+            e.target.reset();
+            loadExams();
+            loadAnalytics(); // Refresh analytics after saving
+        } else {
+            Toast.show('Error saving exam schedule: ' + response.message, 'error');
+        }
+    });
+} else {
+    console.error('Exam form not found');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Admin dashboard loaded, initializing analytics...');
+    console.log('API object available:', typeof API !== 'undefined');
+    console.log('Toast object available:', typeof Toast !== 'undefined');
+    loadAnalytics();
+});
+</script>
+{% endblock %}
